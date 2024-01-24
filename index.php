@@ -12,8 +12,18 @@ $sdk = new Sdk($sharedConfig);
 
 $s3 = $sdk->createS3();
 
-$result = $s3->listBuckets();
+$bucketName = 'your-bucket';
+$filePath = './example.txt';
+$objectName = 'example.txt';
 
-foreach ($result['Buckets'] as $bucket) {
-    echo $bucket['Name'] . "\n";
+$s3->putObject([
+    'Bucket' => $bucketName,
+    'Key'    => $objectName,
+    'Body'   => fopen($filePath, 'r'),
+]);
+
+$result = $s3->listObjects(['Bucket' => $bucketName]);
+
+foreach ($result['Contents'] as $object) {
+    echo $object['Key'] . "\n";
 }
